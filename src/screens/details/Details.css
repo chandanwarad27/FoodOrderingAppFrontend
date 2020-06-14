@@ -4,6 +4,7 @@
     padding: 25px;
     background-color: rgb(231, 231, 231)
 }
+
 @media screen and (max-width:600px){
     .restaurant-details-container{
         flex-direction: column;
@@ -38,13 +39,11 @@
 .restaurant-rating{
     display: flex;
     align-items: baseline;
-
 }
 
 .restaurant-avg-cost{
     display: flex;
-    align-items: baseline;
-
+    align-items: baseline;   
 }
 
 .restaurant-rating-container{
@@ -62,4 +61,15 @@
 
 .restaurant-NoOfCustomerRated{
     font-weight: bold;
+}
+
+.item-price{
+    display:flex;
+    align-items: baseline;
+    margin-left: auto;
+}
+
+.menu-item-container{
+    display: flex;
+    align-items: center;
 }
