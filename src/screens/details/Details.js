@@ -21,6 +21,7 @@ import '@fortawesome/fontawesome-free-solid';
 import '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-free-regular';
 
+
 import "./Details.css"
 
 const styles = (theme => ({
@@ -36,7 +37,7 @@ const styles = (theme => ({
     },
     restaurantCategory: {
         'padding': '8px 0px 8px 0px'
-    },
+    }, 
     avgCost: {
         'padding-left': '5px'
     },
@@ -94,6 +95,7 @@ class Details extends Component {
             snackBarOpen: false,
             snackBarMessage: "",
             transition: Fade,
+            badgeVisible:false,
         }
     }
 
@@ -107,6 +109,7 @@ class Details extends Component {
             if (xhrRestaurantDetails.readyState === 4 && xhrRestaurantDetails.status === 200) {
                 let response = JSON.parse(xhrRestaurantDetails.responseText);
                 let categoriesName = [];
+
                 response.categories.forEach(category => {
                     categoriesName.push(category.category_name);
                 });
@@ -157,11 +160,13 @@ class Details extends Component {
             }
             cartItems.push(cartItem);
         }
+        //updating the total amount for the cart.
         let totalAmount = 0;
         cartItems.forEach(cartItem =>{
-            totalAmount = totalAmount + cartItem.totalAmount;
+            totalAmount = totalAmount + cartItem.totalAmount; 
         })
 
+        //Updating the state.
         this.setState({
             ...this.state,
             cartItems: cartItems,
@@ -181,7 +186,7 @@ class Details extends Component {
             cartItems.splice(index,1);
             itemRemoved = true;
         }else{
-            cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity;
+            cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity; //Updating the Price of the item
         }
 
         let totalAmount = 0;
@@ -204,7 +209,7 @@ class Details extends Component {
         let index =  cartItems.indexOf(item);
         cartItems[index].quantity++;
         cartItems[index].totalAmount = cartItems[index].price * cartItems[index].quantity;
-        
+
         let totalAmount = 0;
         cartItems.forEach(cartItem =>{
             totalAmount = totalAmount + cartItem.totalAmount;
@@ -237,32 +242,38 @@ class Details extends Component {
             })
         }else{
             this.props.history.push({
-                pathname: '/checkout/' + this.props.match.params.id,
+                pathname: '/checkout',
                 cartItems: this.state.cartItems,
                 restaurantDetails: this.state.restaurantDetails,
             })
         }
     }
 
-
-
-snackBarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-        return;
+    snackBarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        this.setState({
+            ...this.state,
+            snackBarMessage: "",
+            snackBarOpen: false,
+        })
     }
-    this.setState({
-        ...this.state,
-        snackBarMessage: "",
-        snackBarOpen: false,
-    })
-}
+
+    //this method changes the visibility of badge when the modal is open in the details page.
+    changeBadgeVisibility = () => {
+        this.setState({
+            ...this.state,
+            badgeVisible:!this.state.badgeVisible,
+        })
+    }
 
 render() {
     const { classes } = this.props;
     return (
 
         <div>
-            <Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false}></Header>
+            <Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false} changeBadgeVisibility = {this.changeBadgeVisibility}></Header>
             <div className="restaurant-details-container">
                 <div>
                     <img src={this.state.restaurantDetails.photoURL} alt="Restaurant" height="215px" width="275px" />
@@ -319,7 +330,7 @@ render() {
                         <CardHeader
                             avatar={
                                 <Avatar aria-label="shopping-cart" className={classes.shoppingCart}>
-                                    <Badge badgeContent={this.state.cartItems.length} color="primary" className={classes.badge}>
+                                    <Badge badgeContent={this.state.cartItems.length} color="primary" showZero = {true} invisible={this.state.badgeVisible} className={classes.badge}>
                                         <ShoppingCartIcon />
                                     </Badge>
                                 </Avatar>
@@ -335,6 +346,7 @@ render() {
                             <div className="cart-menu-item-container" key={cartItem.id}>
                                 <i className="fa fa-stop-circle-o" aria-hidden="true" style={{color:cartItem.itemType === "NON_VEG" ? "#BE4A47" : "#5A9A5B"}}></i>
                                 <Typography variant="subtitle1" component="p" className={classes.menuItemName} id="cart-menu-item-name" >{cartItem.name[0].toUpperCase() + cartItem.name.slice(1)}</Typography>
+                                <div className="quantity-container">
                                 <IconButton className={classes.cartItemButton} id="minus-button" aria-label="remove" onClick = {() => this.minusButtonClickHandler(cartItem)} >
                                     <FontAwesomeIcon icon="minus" size="xs" color="black" />
                                 </IconButton>
@@ -342,6 +354,7 @@ render() {
                                 <IconButton className={classes.cartItemButton} aria-label="add"  onClick = {() => this.cartAddButtonClickHandler(cartItem)}>
                                     <FontAwesomeIcon icon="plus" size="xs" color="black" />
                                 </IconButton>
+                                </div>
                                 <div className="item-price">
                                     <i className="fa fa-inr" aria-hidden="true" style={{ color: 'grey' }}></i>
                                     <Typography variant="subtitle1" component="p" className={classes.itemPrice} id="cart-item-price">{cartItem.totalAmount.toFixed(2)}</Typography>

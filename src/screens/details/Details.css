@@ -13,7 +13,7 @@
         text-align: center;
     }
     .restaurant-avg-cost-container{
-        margin-left: 50px;
+        margin-left: auto;
     }
     .restaurant-rating{
         align-self: center;
@@ -36,6 +36,12 @@
     }
 }
 
+.restaurant-avg-cost-container{
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+}
+
 .restaurant-rating{
     display: flex;
     align-items: baseline;
@@ -43,7 +49,7 @@
 
 .restaurant-avg-cost{
     display: flex;
-    align-items: baseline;  
+    align-items: baseline; 
 }
 
 .restaurant-rating-container{
@@ -51,12 +57,10 @@
     flex-direction: column;
 }
 
-@media screen and (min-width:600px){
-	.restaurant-avg-cost-container{
-		display: flex;
-		flex-direction: column;
-		margin-left: 350px;
-	}
+@media screen and (min-width:1000px){
+    .restaurant-avg-cost-container{
+        margin-left: 350px;
+    }
 }
 
 .restaurant-NoOfCustomerRated{
@@ -91,7 +95,6 @@
 .cart-menu-item-container{
     display: flex;
     align-items: center;
-
 }
 
 .total-price{
@@ -129,8 +132,9 @@
 @media screen and (max-width:600px){
     .menu-details-cart-container{
        flex-direction: column;
-       margin-left: 10px;
-       margin-right: 10px;
+       margin-left: 16px;
+       margin-right: 16px;
+       padding: 0px;
 
     }
     .menu-details{
@@ -140,4 +144,10 @@
         width: 100%;
         padding-top: 30px;
     }
+}
+
+.quantity-container{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
 }
